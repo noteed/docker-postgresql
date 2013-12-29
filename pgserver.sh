@@ -2,13 +2,10 @@
 
 # Start the PostgreSQL Docker image `pgserver` and drop into a psql prompt.
 # Exiting psql will kill the container.
-# This could be simplified as `docker run -t -i -rm=true pgserver psql`.
+# This can be simplified as `docker run -t -i -rm=true pgserver psql` although
+# the `psql` process will thus run within the container.
 
-CONTAINER=$(docker run -d \
-  pgserver \
-  /bin/su postgres -c '/usr/lib/postgresql/9.1/bin/postgres \
-    -D /var/lib/postgresql/9.1/main \
-    -c config_file=/etc/postgresql/9.1/main/postgresql.conf')
+CONTAINER=$(docker run -d pgserver run)
 CONTAINER_IP=$(docker inspect $CONTAINER | grep IPAddress | awk '{ print $2 }' | tr -d ',"')
 echo pgserver:
 echo "  container:" $CONTAINER
@@ -24,3 +21,4 @@ sleep 2
 export PGPASSWORD=docker
 psql -h $CONTAINER_IP -p 5432 -d docker -U docker
 docker kill $CONTAINER
+docker rm $CONTAINER

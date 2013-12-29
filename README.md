@@ -7,4 +7,10 @@ The following command can be used to build the image:
 
     > docker build -t pgserver pgserver
 
-See `pgserver.sh` for an example usage of the resulting image.
+The image provides two commands: `run`, and `psql`. The former simply starts
+the PostgreSQL server. See `pgserver.sh` for an example that use the `run`
+command then spawn a local `psql` process to connect to the server. The later
+directly starts a `psql` process within the container.
+
+    > docker run -d pgserver run
+    > docker run -t -i pgserver psql
