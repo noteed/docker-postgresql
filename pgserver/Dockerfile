@@ -8,6 +8,9 @@ run update-locale LANG=en_US.UTF-8
 
 run apt-get install -q -y vim
 
+# For https://github.com/dotcloud/docker/issues/2972
+run apt-get install -q -y sudo
+
 # Install PostgreSQL
 run apt-get install -q -y postgresql-9.1
 
