@@ -1,5 +1,7 @@
 # Docker images with PostgreSQL
 
+## `pgserver`
+
 `pgserver` is the base server image. It is basically `apt-get install
 postgresql-9.1`, with a "docker" user, and a "docker" database already created.
 
@@ -33,3 +35,9 @@ where `a62681994e1f` is the container ID of a previous run.
 
     > docker run pgserver
     > docker ps -l
+
+# `pgprimary`
+
+`pgprimary` is similar to `pgserver` (and it is built on top of it), but has
+WAL archiving enabled. Read its Dockerfile to see how to configure a new
+image for yourself.
