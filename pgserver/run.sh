@@ -10,6 +10,19 @@ if [ -d "/data" ]; then
 fi
 
 case $1 in
+configure)
+  sudo -u postgres \
+    /usr/lib/postgresql/9.1/bin/postgres \
+      -D $DATA \
+      -c config_file=/etc/postgresql/9.1/main/postgresql.conf &
+  sleep 5
+  sudo -u postgres \
+    psql -c "ALTER DATABASE docker RENAME to $2"
+  sudo -u postgres \
+    psql -c "ALTER USER docker RENAME to $3"
+  sudo -u postgres \
+    psql -c "ALTER USER $3 WITH PASSWORD '$4'"
+  ;;
 psql)
   sudo -u postgres \
     /usr/lib/postgresql/9.1/bin/postgres \
