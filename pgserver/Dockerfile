@@ -14,6 +14,11 @@ run apt-get install -q -y sudo
 # Install PostgreSQL
 run apt-get install -q -y postgresql-9.1
 
+# This line is necessary only for a primary/hot-standby configuration and
+# should be moved to the pgprimary image (but then it will not be able to
+# be based on pgserver).
+run echo "wal_level = hot_standby" >> /etc/postgresql/9.1/main/postgresql.conf
+
 run sh -c "service postgresql start ; su postgres -c 'createuser -d -r -s docker' ; service postgresql stop"
 run sh -c "service postgresql start ; su postgres -c \"psql -c \\\"ALTER USER docker PASSWORD 'docker'\\\"\" ; service postgresql stop"
 run sh -c "service postgresql start ; su postgres -c 'createdb -O docker docker' ; service postgresql stop"
