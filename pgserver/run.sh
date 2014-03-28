@@ -1,7 +1,6 @@
 #! /bin/bash
 
-# If no /data is provided, use the container cluster, otherwise /data is
-# assumed to be a valid PostgreSQL cluster.
+# Use /data as PostgreSQL cluster if available.
 DATA=/var/lib/postgresql/9.1/main
 if [ -d "/data" ]; then
   DATA=/data
@@ -9,11 +8,13 @@ if [ -d "/data" ]; then
   chmod 0700 -R /data
 fi
 
+# Otherwise use the container cluster.
+
 case $1 in
 configure)
   sudo -u postgres \
     /usr/lib/postgresql/9.1/bin/postgres \
-      -D $DATA \
+      -c data_directory=$DATA \
       -c config_file=/etc/postgresql/9.1/main/postgresql.conf &
   sleep 5
   sudo -u postgres \
@@ -26,7 +27,7 @@ configure)
 psql)
   sudo -u postgres \
     /usr/lib/postgresql/9.1/bin/postgres \
-      -D $DATA \
+      -c data_directory=$DATA \
       -c config_file=/etc/postgresql/9.1/main/postgresql.conf &
   sleep 5
   export PGPASSWORD=docker
@@ -35,7 +36,7 @@ psql)
 restore)
   sudo -u postgres \
     /usr/lib/postgresql/9.1/bin/postgres \
-      -D $DATA \
+      -c data_directory=$DATA \
       -c config_file=/etc/postgresql/9.1/main/postgresql.conf &
   sleep 5
   export PGPASSWORD=docker
@@ -43,9 +44,17 @@ restore)
   psql -h 127.0.0.1 -p 5432 -d docker -U docker
   ;;
 run)
+  # Use initial.sh to create /data.
+  if [ -f "/initial.sh" ]; then
+    /initial.sh $2
+    DATA=/data
+    chown postgres:postgres -R /data
+    chmod 0700 -R /data
+    echo Using restored $2.
+  fi
   sudo -u postgres \
     /usr/lib/postgresql/9.1/bin/postgres \
-      -D $DATA \
+      -c data_directory=$DATA \
       -c config_file=/etc/postgresql/9.1/main/postgresql.conf
   ;;
 *)

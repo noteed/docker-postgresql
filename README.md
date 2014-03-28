@@ -35,6 +35,13 @@ server. `psql` directly starts a `psql` process within the container.
     > docker run -d pgserver run
     > docker run -t -i pgserver psql
 
+If a file `/initial.sh` is available in the image, it is executed before
+running the server. Its purpose is to provide another way to create the `/data`
+directory. A second argument can be given and will be passed the script (e.g.
+to give it some URL from which to fetch a tarball).
+
+    > docker run -d pgserver run http://example.com/base.tar.gz
+
 To keep the PostgreSQL cluster around, and possibly reuse it in the next run of
 the image, a volume called `/data` can be given to the container, e.g.:
 
