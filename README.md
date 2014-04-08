@@ -53,13 +53,24 @@ cluster that already exists within the image.
 One possible way to create initially the local `data` directory is to use
 `docker cp`, e.g.:
 
-    > docker cp a62681994e1f:/var/lib/postgresql/9.1/main .
+    > docker run pgserver true
+    > docker cp `docker ps -l -q`:/var/lib/postgresql/9.1/main .
     > mv main data
 
 where `a62681994e1f` is the container ID of a previous run.
 
     > docker run pgserver
     > docker ps -l
+
+A complementary way to create the local `data` is to provide a `build.sh`
+script and use the `build` command:
+
+    > docker run -v `pwd`/build:/build pgserver build
+    > docker cp `docker ps -l -q`:/var/lib/postgresql/9.1/main .
+    > mv main data
+
+This makes it possible to initialize the cluster in a clean way (i.e. the
+server is stopped propoerly with `service postgresql stop`).
 
 # `pgprimary`
 

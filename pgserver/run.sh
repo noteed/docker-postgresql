@@ -57,12 +57,19 @@ run)
       -c data_directory=$DATA \
       -c config_file=/etc/postgresql/9.1/main/postgresql.conf
   ;;
+build)
+  service postgresql start
+  /build/build.sh
+  service postgresql stop
+  chown 1000:1000 -R /var/lib/postgresql/9.1/main
+  ;;
 *)
   echo Commands:
   echo "  configure  Reconfigure the database, user, and password."
   echo "  psql       Run the PostgreSQL server and a psql prompt."
   echo "  restore    Restore a cluster dump."
   echo "  run        Run only the PostgreSQL server."
+  echo "  build      Run a script between start and stop to build the cluster."
 esac
 
 # Make /data useable again by any user on the host.
