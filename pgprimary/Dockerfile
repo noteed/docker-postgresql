@@ -1,4 +1,4 @@
-from pgserver
+from noteed/pgserver
 maintainer Vo Minh Thu <noteed@gmail.com>
 
 # OpenSSH for the `scp` binary.
