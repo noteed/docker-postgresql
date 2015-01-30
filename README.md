@@ -9,9 +9,10 @@ The following command can be used to build the image:
 
     > docker build -t pgserver pgserver
 
-The image provides four commands:
+The image provides five commands:
 
 - `configure`,
+- `build`,
 - `run`,
 - `restore`
 - and `psql`.
@@ -20,7 +21,7 @@ The image provides four commands:
 password. Once the container exits, you can commit it to a new image.
 
     > docker run pgserver configure <database> <user> <password>
-    > docker commit `docker ps -q` <image>
+    > docker commit `docker ps -l -q` <image>
 
 `restore` is used to temporarily restore a database cluster dump and inspect it
 with `psql`. Assuming the file to restore and inspect is in the current
@@ -70,7 +71,7 @@ script and use the `build` command:
     > mv main data
 
 This makes it possible to initialize the cluster in a clean way (i.e. the
-server is stopped propoerly with `service postgresql stop`).
+server is stopped properly with `service postgresql stop`).
 
 # `pgprimary`
 
